@@ -3,12 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@arwes/animated": "^1.0.0-next.7",
+    "@arwes/animator": "^1.0.0-next.7",
+    "@arwes/bgs": "^1.0.0-next.7",
+    "@arwes/bleeps": "^1.0.0-next.7",
+    "@arwes/frames": "^1.0.0-next.8",
+    "@arwes/react": "^1.0.0-next.9",
+    "@arwes/text": "^1.0.0-next.7",
+    "@arwes/theme": "^1.0.0-next.7",
+    "@arwes/tools": "^1.0.0-next.7",
+    "@emotion/css": "^11.11.2",
+    "@emotion/react": "^11.11.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "animejs": "^3.2.1",
+    "howler": "2.2",
+    "path-browserify": "^1.0.1",
+    "polished": "^4.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "socket.io-client": "^4.6.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -34,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }
