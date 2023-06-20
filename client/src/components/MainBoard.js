@@ -5,30 +5,47 @@ import { GridPaper } from '../base/GridPaper'; // replace with your actual file 
 
 
 const classes = {
-  root: {
-    flexGrow: 1
-  },
   paper: {
     padding: 20,
     textAlign: "center",
+  },
+  gameCard: {
+    padding: 10,
+    width: "120px",
+    height: "200px",
+    float: "left",
+    marginRight:"10px",
+  }
+  ,
+  cardContainer: {
+    width: "100%",
+    height: "200px",
   }
 };
-//the InnerGrid component will be a collection of multiple Grid items
-function InnerGrid() {
+let allGameCards = [
+  {
+    id: 1,
+    name: "TestCard1",
+  }
+]
+
+const GameCard = ({ id }) => {
+  const currentCard = { ...allGameCards.find(card => card.id == id) }
+  console.log(allGameCards)
+  console.log(currentCard)
   return (
-    <>
-      <Grid item xs={4}>
-        <Paper style={classes.paper}>item</Paper>
-      </Grid>
-      <Grid item xs={4}>
-        <Paper style={classes.paper}>item</Paper>
-      </Grid>
-      <Grid item xs={4}>
-        <Paper style={classes.paper}>item</Paper>
-      </Grid>
-    </>
+    <Paper style={classes.gameCard}>
+      {currentCard.name}
+    </Paper>
   );
 }
+
+const CardContainer = ({ children }) => (
+  <Paper style={classes.cardContainer}>
+    {children}
+  </Paper>
+);
+
 
 const RowContainer = ({ xs, children }) => (
   <Grid item xs={xs} sx={{ height: "100%", width: "100vw" }}>
@@ -85,18 +102,21 @@ export const Board2 = () => {
             </Grid>
             <Grid item xs={6}>
               <Paper style={classes.paper}>
-                  Risk <br></br> Cards
+                Risk <br></br> Cards
               </Paper>
             </Grid>
-
-
           </Grid>
-
         </GridItem>
       </RowContainer>
       <RowContainer xs={4}>
         <GridItem xs={4}>Your Played Cards</GridItem>
-        <GridItem xs={6}>CARDS ON HAND HERE</GridItem>
+        <GridItem xs={6}>
+          <CardContainer>
+            <GameCard id={1} />
+            <GameCard id={1} />
+            <GameCard id={1} />
+          </CardContainer>
+        </GridItem>
         <GridItem xs={2}><Button>Lock In</Button></GridItem>
       </RowContainer>
     </Grid>

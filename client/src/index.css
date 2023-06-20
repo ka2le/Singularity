@@ -12,3 +12,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200&display=swap");
+* {
+  font-family: "Titillium Web", sans-serif !important;
+}
+
+a {
+  margin-right: 1em;
+}
+

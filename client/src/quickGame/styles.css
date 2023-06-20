@@ -1,0 +1,32 @@
+.board {
+    padding: 10px;
+    background-color: #232343;
+  }
+  button, input{
+    background-color: black;
+    color: aqua;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  
+  .player-container {
+    border: 1px solid rgba(255, 255, 255, 0.235);
+    float: left;
+    border-radius: 5px;
+    padding: 15px;
+  }
+  
+  .card {
+    border: 1px solid rgba(0, 255, 110, 0.359);
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  .buy,  .invest{
+    border: 1px solid rgba(255, 255, 255, 0.079);
+    min-width: 100px;
+    display: inline-block;
+  }
+  .invest {
+    width: 300px;
+  }
