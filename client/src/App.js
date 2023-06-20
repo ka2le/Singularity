@@ -5,6 +5,7 @@ import { SimpleBoard } from './quickGame/SimpleBoard';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import theme from './theme';
 import BettingGameContainer from './betting/BettingGame';
+import SimplePokerContainer from './betting/SimplePoker';
 
 const MyApp = () => {
 
@@ -14,7 +15,7 @@ const MyApp = () => {
       <CssBaseline />
       <div className="App" style={{  height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backgroundColor: `black`, backgroundSize: 'cover' }}>
 
-        <BettingGameContainer></BettingGameContainer>
+        <SimplePokerContainer></SimplePokerContainer>
         </div>
       </ThemeProvider>
     </>

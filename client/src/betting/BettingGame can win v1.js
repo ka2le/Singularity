@@ -62,12 +62,12 @@ export const BettingGameContainer = () => {
         <div>
             <h1>BETTING GAME</h1>
             <button onClick={() => generateRandomTrainingData(3)}>Generate Training Data</button>
-            <button onClick={() => train(300, 50)}>Train New Model</button>
+            <button onClick={() => train(50, 50)}>Train New Model</button>
             <button onClick={() => train(100, 30, model)}>Continue Training Model</button>
             <button onClick={() => trainWithModel(50, 50, model)}>Training Model on its own data</button>
             <button onClick={saveModel}>Save Model</button>
             <button onClick={loadModel}>Load Model</button>
-            <button onClick={() => runGamesWithModel(1, "ai")}>Run Games</button>
+            <button onClick={() => runGamesWithModel(10, "ai")}>Run Games</button>
         </div>
     );
 }
@@ -91,8 +91,7 @@ const preprocess = (games) => {
             ];
             inputData.push(input);
 
-            // Assign 1 if player 1 won the game, 0 otherwise
-            let output = game.gameResult === 1 ? 1 : 0;
+            let output = round.player1Bet > round.player2Bet ? 1 : 0;  // 1 if player 1 won, 0 otherwise
             outputData.push(output);
         });
     });
@@ -104,35 +103,16 @@ const preprocess = (games) => {
 }
 
 
-async function trainModel(games, numEpochs, model = null) {
+async function trainModel(games) {
     const [xs, ys] = preprocess(games);
-    if (model === null) {
-        model = tf.sequential();
-        model.add(tf.layers.dense({
-            units: 32,
-            activation: 'tanh',
-            inputShape: [6],
-            kernelRegularizer: tf.regularizers.l2({l2: 0.01})  // L2 regularization
-        }));
-        model.add(tf.layers.dense({ units: 128, activation: 'tanh' }));  // added layer
-        model.add(tf.layers.dense({ units: 64, activation: 'tanh' }));  // added layer
-        model.add(tf.layers.dense({ units: 64, activation: 'tanh' }));  // added layer
-        model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
-        model.compile({ optimizer: 'adam', loss: 'binaryCrossentropy' });
-
-    }
-
+    const model = tf.sequential();
+    model.add(tf.layers.dense({ units: 32, activation: 'relu', inputShape: [6] }));
+    model.add(tf.layers.dense({ units: 64, activation: 'relu' }));
+    model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
+    model.compile({ optimizer: 'adam', loss: 'binaryCrossentropy' });
     await model.fit(xs, ys, {
-        epochs: numEpochs,
+        epochs: 100,
         validationSplit: 0.3,
-        callbacks: {
-            onEpochEnd: (epoch, logs) => {
-              const logInterval = Math.floor(numEpochs / 6); // Calculate the interval for logging
-              if (epoch === 0 || epoch === numEpochs - 1 || epoch % logInterval === 0) {
-                console.log(`Epoch ${epoch}: loss = ${logs.loss}`);
-              }
-            }
-          }
     });
     return model;
 }
@@ -156,11 +136,11 @@ async function trainModel(games, numEpochs, model = null) {
 
 // AI Player
 async function aiPlayer(model, gameState, player) {
-    const playerMoney = gameState.player1Money-(4-gameState.round);
-    let bestBet = 1;
+    const playerMoney = gameState.player1Money;
+    let bestBet = 0;
     let bestBetProbability = 0;
-    // console.log("ROUND ______________________ "+  gameState.round)
-    for (let possibleBet = 1; possibleBet <= playerMoney; possibleBet++) {
+   // console.log("ROUND ______________________ "+  gameState.round)
+    for (let possibleBet = 0; possibleBet <= playerMoney; possibleBet++) {
         let input = [
             gameState.player1Money,
             gameState.player2Money,
@@ -172,7 +152,7 @@ async function aiPlayer(model, gameState, player) {
 
         let prediction = model.predict(tf.tensor2d([input]));
         let winProbability = prediction.dataSync()[0];
-         console.log("Bet "+ possibleBet+ " has chance "+winProbability)
+       // console.log("Bet "+ possibleBet+ " has chance "+winProbability)
 
         if (winProbability > bestBetProbability) {
             bestBet = possibleBet;
@@ -187,9 +167,7 @@ async function aiPlayer(model, gameState, player) {
 // Random Player
 async function randomPlayer(gameState, player) {
     const playerMoney = player == 1 ? gameState.player1Money : gameState.player2Money; // or gameState.player2Money, depending on which player this function is used for
-    let maxBettingMoney = playerMoney-(4-gameState.round)
-    maxBettingMoney = gameState.round<3 ? Math.min(maxBettingMoney, 50) : maxBettingMoney;
-    return Math.floor(Math.random() * (maxBettingMoney)+1); // returns a random number between 0 and playerMoney, inclusive
+    return Math.floor(Math.random() * (playerMoney + 1)); // returns a random number between 0 and playerMoney, inclusive
 }
 
 
