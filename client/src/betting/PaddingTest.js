@@ -1,6 +1,8 @@
 import * as tf from '@tensorflow/tfjs';
 import React, { useState } from 'react';
 
+const TOTAL_ROUNDS = 5;
+
 
 export const PaddingTest = () => {
     const [model, setModel] = useState(null);
@@ -34,7 +36,7 @@ export const PaddingTest = () => {
     return (
         <div>
             <h1>SIMPLE AI GAME</h1>
-            <button onClick={() => train(200, 100)}>Train New Model - Random Vs Random</button>
+            <button onClick={() => train(100, 15)}>Train New Model - Random Vs Random</button>
             <button onClick={() => runGamesWithModel(5, "ai")}>Run Games</button>
             <button onClick={() => runRandomGames(1)}>Run Random Games</button>
         </div>
@@ -43,41 +45,20 @@ export const PaddingTest = () => {
 
 
 
-
-const preprocess = (gameStates) => {
-    let inputData = [];
-    let outputData = [];
-    gameStates.forEach(gameState => {
-        let input = [
-            gameState.p1Hand,
-            gameState.p1Bet,
-            gameState.p1Money,
-            gameState.round
-        ]
-        inputData.push(input);
-        let output = gameState.p1Result;
-        outputData.push(output);
-    });
-
-    const xs = tf.tensor2d(inputData, [inputData.length, inputData[0].length]);
-    const ys = tf.tensor2d(outputData, [outputData.length, 1]);
-    return [xs, ys, inputData[0].length];
-}
-
-
 async function trainModel(games, numEpochs, model = null) {
-    const [xs, ys, inputLenght] = preprocess(games);
+    const [xs, ys, gameLengt,] = preprocess(games);
 
     model = tf.sequential();
-    model.add(tf.layers.dense({ units: 5, activation: 'relu', inputShape: [inputLenght], kernelRegularizer: tf.regularizers.l2({ l2: 0.01 }), biasRegularizer: tf.regularizers.l2({ l2: 0.01 }) }));
-    model.add(tf.layers.dense({ units: 20, activation: 'relu', kernelRegularizer: tf.regularizers.l2({ l2: 0.01 }), biasRegularizer: tf.regularizers.l2({ l2: 0.01 }) }));
-    model.add(tf.layers.dense({ units: 20, activation: 'relu', kernelRegularizer: tf.regularizers.l2({ l2: 0.01 }), biasRegularizer: tf.regularizers.l2({ l2: 0.01 }) }));
-    model.add(tf.layers.dense({ units: 20, activation: 'relu', kernelRegularizer: tf.regularizers.l2({ l2: 0.01 }), biasRegularizer: tf.regularizers.l2({ l2: 0.01 }) }));
-    model.add(tf.layers.dense({ units: 1, activation: 'linear' }));
-    model.compile({ optimizer: 'adam', loss: 'meanSquaredError' });
+    model.add(tf.layers.dense({ units: 66, activation: 'elu', inputShape: [gameLengt] }));
+    model.add(tf.layers.dense({ units: 80, activation: 'elu', }));
+    model.add(tf.layers.dense({ units: 80, activation: 'elu', }));
+    model.add(tf.layers.dense({ units: 80, activation: 'elu', }));
+    model.add(tf.layers.dense({ units: 80, activation: 'elu', }));
+    model.add(tf.layers.dense({ units: 3, activation: 'softmax' }));
+    model.compile({ optimizer: 'adam', loss: 'categoricalCrossentropy', metrics: ['accuracy'], });
 
     const patience = 20;
-    const min_delta = 0.1;
+    const min_delta = 0.001;
     let bestValLoss = Number.MAX_VALUE;
     let count = 0;
     const logInterval = Math.floor(numEpochs / 6);
@@ -107,62 +88,119 @@ async function trainModel(games, numEpochs, model = null) {
 }
 
 
+const preprocess = (gameStates) => {
+    let inputData = [];
+    let outputData = [];
+    gameStates.forEach(gameState => {
+        const [newInputData, newOutputData] = preproceseGameState(gameState);
+        inputData = [...inputData, ...newInputData];
+        outputData = [...outputData, ...newOutputData];
+    });
+    const xs = tf.tensor2d(inputData, [inputData.length, inputData[0].length]);
+    const ys = tf.tensor2d(outputData, [outputData.length,  outputData[0].length]);
+    return [xs, ys, inputData[0].length];
+}
 
-// AI Player
-async function aiPlayer(model, gameState, player) {
-    const maxBet = player == 1 ? gameState.p1Money : gameState.p2Money;
-    const currentHand = player == 1 ? gameState.p1Hand : gameState.p2Hand
-    let bestBet = 0;
-    let bestBetProbability = 0;
-    for (let possibleBet = 0; possibleBet <= maxBet; possibleBet++) {
-        let input = [
-            currentHand,
-            possibleBet,
-            maxBet,
-            gameState.round
-        ];
+function getOneHotEncodedOutcome(result) {
+    if (result === -1) return [1, 0, 0]; // Player 2 wins
+    if (result === 0) return [0, 1, 0]; // Tie
+    if (result === 1) return [0, 0, 1]; // Player 1 wins
+}
 
-        let prediction = model.predict(tf.tensor2d([input]));
-        let winProbability = prediction.dataSync()[0];
-        // console.log("Bet:" + possibleBet + "  p1Hand:" + gameState.p1Hand, "  WinPredic:" + winProbability)
-
-        if (winProbability > bestBetProbability) {
-            bestBet = possibleBet;
-            bestBetProbability = winProbability;
+function preproceseGameState(gameState, currentRound = null, move = -1) {
+    let flatGameState = [];
+    const inputData = [];
+    const outputData = [];
+    let currentRoundInputData = []
+    gameState.forEach(roundState => {
+        let currentRoundTotalState = []
+        const roundStateArray = [
+            move > -1 ? move : roundState.playerMoves[0] ?? -1,
+            roundState.playerMoves[1] ?? -1,
+            ...roundState.playerMoney,
+            ...roundState.playerScore,
+            roundState.playerHands[0][0]?.id ?? -1,
+            roundState.playerHands[0][1]?.id ?? -1,
+            roundState.playerHands[1][1]?.id ?? -1,
+            roundState.playerHands[1][1]?.id ?? -1,
+            roundState.round,
+        ]
+        flatGameState = [...flatGameState, ...roundStateArray];
+        currentRoundTotalState = [...flatGameState]
+        let indexToHide = (roundState.round * roundStateArray.length) + 1;
+        currentRoundTotalState[indexToHide] = -1;
+        for (let round = roundState.round; round < TOTAL_ROUNDS; round++) {
+            currentRoundTotalState = [...currentRoundTotalState, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1];
         }
-    }
-    return bestBet
+        if (currentRound && roundState.round == currentRound) {
+            currentRoundInputData = currentRoundTotalState
+        }
+
+        inputData.push(currentRoundTotalState);
+        const result = getWinnerFromGameState(gameState);
+        outputData.push(getOneHotEncodedOutcome(result));
+    })
+    return [inputData, outputData, currentRoundInputData]
 }
 
 
 
-const cards = [
-    {
-        id: 0,
-        cost: 4,
-        score: 3,
-    }, {
-        id: 1,
-        cost: 0,
-        score: 2,
-    }
-]
 
-// Random Player
-async function randomPlayer(gameState, player, round) {
-    const roundState = gameState[round];
-    let cardIds = [roundState[player * 2], roundState[player * 2 + 1]]
-    let playerMoney = roundState[player * 1 + 4]
-    const playableCards = []
-    cardIds.forEach(cardId => {
-        if (cardId > 0) {
-            if(isCardPlayable(playerMoney, cards[cardId].cost)){
-                playableCards.push(cardId);
+
+// AI Player
+async function aiPlayer(model, roundState, player, gameState) {
+    
+    let cards = roundState.playerHands[player];
+    let playerMoney = roundState.playerMoney[player];
+    const playableCardIds = []
+    const round = roundState.round;
+    console.log("AiPlayer - Round: " + round)
+    cards.forEach(card => {
+        //console.log(card)
+        if (card.id > -1) {
+            if (isCardPlayable(playerMoney, card.cost)) {
+                playableCardIds.push(card.id);
             }
         }
     });
-    const cardToPlayId = Math.round(Math.random()*(playableCards.length-1));
-    return cardToPlayId;
+    let bestMove = playableCardIds[0] ?? -1
+    let bestBetProbability = -1;
+    playableCardIds.forEach(cardId => {
+        const [inputData, , modelInput] = preproceseGameState(gameState, round, cardId)
+        let prediction = model.predict(tf.tensor2d([inputData[inputData.length - 1]]));
+        let winProbability = prediction.dataSync()[2]; // Index 2 is the probability of Player 1 winning
+        
+        console.log("Checking  "  + cardId +" winProbability "+winProbability )
+        if (winProbability > bestBetProbability) {
+            bestMove = cardId;
+            bestBetProbability = winProbability;
+        }
+    })
+
+    
+    return bestMove;
+}
+
+
+
+// Random Player
+async function randomPlayer(roundState, player, gameState) {
+    // console.log("Player " + (player + 1))
+    let cards = roundState.playerHands[player];
+    let playerMoney = roundState.playerMoney[player];
+    const playableCards = []
+    cards.forEach(card => {
+        //console.log(card)
+        if (card.id > -1) {
+            if (isCardPlayable(playerMoney, card.cost)) {
+                playableCards.push(card.id);
+            }
+        }
+    });
+    const cardToPlayIndex = Math.round(Math.random() * (playableCards.length - 1));
+    //console.log(playableCards)
+    //console.log(cardToPlayIndex)
+    return playableCards[cardToPlayIndex] ?? -1;
 }
 
 
@@ -174,62 +212,99 @@ function isCardPlayable(money, cost) {
 }
 
 
+
+const cards = [
+    {
+        id: 0,
+        cost: 1,
+        score: 1,
+    }, {
+        id: 1,
+        cost: 1,
+        score: 10,
+    },
+    {
+        id: 2,
+        cost: 1,
+        score: 5,
+    },
+    {
+        id: 3,
+        cost: 2,
+        score: 12,
+    }
+]
+
+
 async function runGame(player1Function, player2Function) {
-    const playerHands = [[cards[0]], [cards[0]]]
+    let playerHands = [[cards[0]], [cards[0]]]
     let playerMoney = [5, 5]
     let playerScore = [5, 5]
-    const totalRounds = 2;
-    let gameState = [
-        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-        [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    ];
+    const totalRounds = TOTAL_ROUNDS;
+    let gameState = [];
     function playCard(id, player) {
-        playerScore[player] += cards[id].score;
-        playerMoney[player] -= cards[id].cost;
+        if (id > -1) {
+            playerScore[player] += cards[id].score;
+            playerMoney[player] -= cards[id].cost;
+            const cardIndexInHand = playerHands[player].findIndex(card => card.id == id);
+            playerHands[player] = cardIndexInHand !== -1 && playerHands[player].splice(cardIndexInHand, 1);
+        } else {
+            //console.log("No card Played")
+        }
+
 
     }
     for (var round = 0; round < totalRounds; round++) {
-        console.log("Starting round " + round)
-        playerHands[0].push(cards[1])
-        playerHands[1].push(cards[1])
-        const roundState = [
-            playerHands[0][0].id ?? -1,
-            playerHands[0][1].id ?? -1,
-            playerHands[1][0].id ?? -1,
-            playerHands[1][1].id ?? -1,
-            playerMoney[0],
-            playerMoney[1],
-            playerScore[0],
-            playerScore[1],
-            -1,
-            -1,
-        ]
-        console.log("RoundState:")
-        console.log( roundState)
-        gameState[round] = roundState;
-        const playerMoves = [await randomPlayer(gameState, 0, round), await randomPlayer(gameState, 1, round)]
-        console.log("playerMoves" + playerMoves[0] +", "+playerMoves[1])
-        roundState[8] = playerMoves[0];
-        roundState[9] = playerMoves[1];
-        gameState[round] = roundState;
-        playCard( playerMoves[0], 0);
-        playCard( playerMoves[1], 1);
+        // console.log("Starting round " + round)
+        if (round < totalRounds - 1) {
+            // if (playerHands[0].length < 2) {
+            //     playerHands[0].push(cards[Math.round(Math.random() * (cards.length - 1))])
+            // }
+            // if (playerHands[1].length < 2) {
+            //     playerHands[1].push(cards[Math.round(Math.random() * (cards.length - 1))])
+            // }
+            playerHands = [[cards[0], cards[1]], [cards[0], cards[1]]];
+
+        }
+        let roundState = {
+            playerHands: [...playerHands],
+            playerMoney: [...playerMoney],
+            playerScore: [...playerScore],
+            playerMoves: [-1, -1],
+            round: round
+        }
+        //console.log("RoundState:")
+        // console.log(roundState)
+        gameState.push(roundState);
+        const playerMoves = [await player1Function(roundState, 0, gameState), await player2Function(roundState, 1, gameState)]
+        //   console.log("playerMoves" + playerMoves[0] + ", " + playerMoves[1])
+        roundState = { ...roundState, playerMoves: playerMoves }
+        gameState[gameState.length - 1] = roundState;
+        playCard(playerMoves[0], 0);
+        playCard(playerMoves[1], 1);
     }
-    const roundState = [
-        playerHands[0][0].id ?? -1,
-        playerHands[0][1].id ?? -1,
-        playerHands[1][0].id ?? -1,
-        playerHands[1][1].id ?? -1,
-        playerMoney[0],
-        playerMoney[1],
-        playerScore[0],
-        playerScore[1],
-        -1,
-        -1,
-    ]
-    gameState[totalRounds] = roundState;
+    const finalGameState = {
+        playerHands: playerHands,
+        playerMoney: playerMoney,
+        playerScore: playerScore,
+        round: totalRounds,
+        playerMoves: [-1, -1]
+    }
+    gameState.push(finalGameState);
     return gameState
+}
+
+function getWinnerFromGameState(gameState) {
+    const finalGameState = gameState[gameState.length - 1];
+    const p1Score = finalGameState.playerScore[0];
+    const p2Score = finalGameState.playerScore[1];
+    if (p1Score > p2Score) {
+        return 1
+    } else if (p2Score > p1Score) {
+        return -1;
+    } else {
+        return 0;
+    }
 }
 
 async function runGames(player1Function, player2Function, numGames) {
@@ -240,10 +315,21 @@ async function runGames(player1Function, player2Function, numGames) {
     let p2Earnings = 0;
     let ties = 0;
     for (let i = 0; i < numGames; i++) {
+        console.log("NEW GAME " +i)
         const gameStateMultipleRounds = await runGame(player1Function, player2Function)
         const finalGameState = gameStateMultipleRounds[gameStateMultipleRounds.length - 1];
-
-        gameStates.push(...gameStateMultipleRounds)
+        const p1Score = finalGameState.playerScore[0];
+        const p2Score = finalGameState.playerScore[1];
+        if (p1Score > p2Score) {
+            p1Wins++;
+        } else if (p2Score > p1Score) {
+            p2Wins++;
+        } else {
+            ties++;
+        }
+        p1Earnings += p1Score;
+        p2Earnings += p2Score;
+        gameStates.push(gameStateMultipleRounds)
     }
     console.log("Player 1 Earnings " + p1Earnings + "     Avg:" + Math.round(p1Earnings / numGames) + "   Wins:" + p1Wins + "   Ties:" + ties)
     console.log("Player 2 Earnings " + p2Earnings + "     Avg:" + Math.round(p2Earnings / numGames) + "   Wins:" + p2Wins)
