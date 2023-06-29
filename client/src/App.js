@@ -7,6 +7,7 @@ import theme from './theme';
 import BettingGameContainer from './betting/BettingGame';
 import SimplePokerContainer from './betting/SimplePoker';
 import PaddingTest from './betting/PaddingTest';
+import ReinforementLearning from './betting/ReinforementLearning';
 
 const MyApp = () => {
 
@@ -16,8 +17,7 @@ const MyApp = () => {
         <CssBaseline />
         <div className="App" style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', backgroundColor: `black`, backgroundSize: 'cover' }}>
 
-          <PaddingTest></PaddingTest>
-        </div>
+<ReinforementLearning></ReinforementLearning>        </div>
       </ThemeProvider>
     </>
 
