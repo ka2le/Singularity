@@ -19,6 +19,7 @@ from tf_agents.trajectories import trajectory
 from tf_agents.drivers import dynamic_step_driver
 from tf_agents.networks import network
 from singularity import SingularityGameEnv
+from singularitySprint import SingularitySprintEnv
 from simple import SimpleCardGameEnv
 import config as conf
 from tf_agents.networks import encoding_network
@@ -151,8 +152,10 @@ class MyQNetwork(network.Network):
             'current_round': tf.keras.layers.Dense(2),
             'player_score': tf.keras.layers.Dense(3),
             'player_data': tf.keras.layers.Dense(3),
+            'card_play_status': tf.keras.layers.Dense(conf.NUMBER_OF_CARDS),
             'player_processing': tf.keras.layers.Dense(3),
             'player_hand': tf.keras.layers.Dense(num_actions),
+            
         }
 
         # Define combiner.
@@ -187,7 +190,8 @@ class MyQNetwork(network.Network):
     
 @timer_decorator
 def main(TOTAL_ITERATIONS=conf.DEFAULT_TOTAL_ITERATIONS, MODE=conf.DEFAULT_MODE):
-    gym_env = SimpleCardGameEnv()
+    #gym_env = SimpleCardGameEnv()
+    gym_env = SingularitySprintEnv()
     env =  gym_wrapper.GymWrapper(gym_env)
     train_env = tf_py_environment.TFPyEnvironment(env)
     eval_env = tf_py_environment.TFPyEnvironment(env)
@@ -353,7 +357,7 @@ def train():
 
 def trainAndTest(num_train, num_test = 5):
     trained_agent = main(num_train)
-    gym_env = SimpleCardGameEnv()
+    gym_env = SingularitySprintEnv()
     test_env = gym_wrapper.GymWrapper(gym_env)
     tf_test_env = tf_py_environment.TFPyEnvironment(test_env)
     episode_rewards, episode_actions, episode_scores, round_card_actions = test_agent(gym_env, tf_test_env, trained_agent, num_test)
@@ -362,7 +366,7 @@ def trainAndTest(num_train, num_test = 5):
 
 if __name__ == "__main__":
     trained_agent = main()
-    gym_env = SimpleCardGameEnv()
+    gym_env = SingularitySprintEnv()
     test_env = gym_wrapper.GymWrapper(gym_env)
     tf_test_env = tf_py_environment.TFPyEnvironment(test_env)
     test_agent(gym_env, tf_test_env, trained_agent)
