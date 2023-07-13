@@ -77,17 +77,8 @@ def compute_avg_return(environment, policy, num_episodes=10):
 
 
 
-def collect_episode(environment, policy, buffer):
-    episode_reward = 0
-    time_step = environment.reset()
-    while not time_step.is_last():
-        action_step = policy.action(time_step)
-        next_time_step = environment.step(action_step.action)
-        traj = trajectory.from_transition(time_step, action_step, next_time_step)
-        buffer.add_batch(traj)
-        episode_reward += next_time_step.reward
-        time_step = next_time_step
-    return episode_reward
+
+
 
 class MaskedPolicy(tf_policy.TFPolicy):
     def __init__(self, policy, q_network, env):
@@ -141,7 +132,7 @@ class MaskedPolicy(tf_policy.TFPolicy):
 
 
 class MyQNetwork(network.Network):
-    def __init__(self, num_actions, fc_layer_params, observation_spec, name=None):
+    def __init__(self, num_actions,  observation_spec, name=None):
         super(MyQNetwork, self).__init__(
             input_tensor_spec=observation_spec,
             state_spec=(),
@@ -160,7 +151,7 @@ class MyQNetwork(network.Network):
 
         # Define combiner.
         self.preprocessing_combiner = tf.keras.layers.Concatenate(axis=-1)
-
+        fc_layer_params = (conf.DEFAULT_NETWORK_WIDTH,) * conf.DEFAULT_NETWORK_DEPTH
         # Define fully connected layers.
         self.fc_layers = []
         for num_units in fc_layer_params:
@@ -187,7 +178,33 @@ class MyQNetwork(network.Network):
         q_values = self.output_layer(fc_output)
 
         return q_values, network_state
-    
+
+
+def collect_step(environment, policy, buffer, mode = conf.DEFAULT_MODE):
+    time_step = environment.current_time_step()
+    if time_step.is_last():
+        time_step = environment.reset()
+    action_step = policy.action(time_step)
+    next_time_step = environment.step(action_step.action)
+    traj = trajectory.from_transition(time_step, action_step, next_time_step)
+    if mode == 'human':
+        environment.pyenv.envs[0].render()
+    buffer.add_batch(traj)
+    return next_time_step
+
+def collect_episode(environment, policy, buffer):
+    episode_reward = 0
+    time_step = environment.reset()
+    while not time_step.is_last():
+        time_step = collect_step(environment, policy, buffer)
+        episode_reward += time_step.reward
+    return episode_reward
+
+
+def collect_data(env, policy, buffer, steps):
+        for _ in range(steps):
+            collect_step(env, policy, buffer)
+
 @timer_decorator
 def main(TOTAL_ITERATIONS=conf.DEFAULT_TOTAL_ITERATIONS, MODE=conf.DEFAULT_MODE):
     #gym_env = SimpleCardGameEnv()
@@ -195,9 +212,7 @@ def main(TOTAL_ITERATIONS=conf.DEFAULT_TOTAL_ITERATIONS, MODE=conf.DEFAULT_MODE)
     env =  gym_wrapper.GymWrapper(gym_env)
     train_env = tf_py_environment.TFPyEnvironment(env)
     eval_env = tf_py_environment.TFPyEnvironment(env)
-
-    fc_layer_params = (conf.DEFAULT_NETWORK_WIDTH,) * conf.DEFAULT_NETWORK_DEPTH
-    q_net = MyQNetwork(conf.NUMBER_OF_CARDS, fc_layer_params, train_env.observation_spec())
+    q_net = MyQNetwork(conf.NUMBER_OF_CARDS,  train_env.observation_spec())
     optimizer = tf.compat.v1.train.AdamOptimizer(learning_rate=conf.LEARNING_RATE)
     train_step_counter = tf.Variable(0)
     epsilon_fn = tf.keras.optimizers.schedules.PolynomialDecay(
@@ -228,39 +243,22 @@ def main(TOTAL_ITERATIONS=conf.DEFAULT_TOTAL_ITERATIONS, MODE=conf.DEFAULT_MODE)
     random_policy = random_tf_policy.RandomTFPolicy(train_env.time_step_spec(),
                                                     train_env.action_spec())
 
-    def collect_step(environment, policy, buffer):
-        time_step = environment.current_time_step()
-        action_step = policy.action(time_step)
-        next_time_step = environment.step(action_step.action)
-        traj = trajectory.from_transition(time_step, action_step, next_time_step)
-        if MODE == 'human':
-            environment.pyenv.envs[0].render()
+    collect_data(train_env, random_policy, replay_buffer, steps=1000)
 
-        buffer.add_batch(traj)
-
-    def collect_data(env, policy, buffer, steps):
-        for _ in range(steps):
-            collect_step(env, policy, buffer)
-
-    collect_data(train_env, random_policy, replay_buffer, steps=500)
     dataset = replay_buffer.as_dataset(
         num_parallel_calls=8, 
         sample_batch_size=conf.BATCH_SIZE, 
         num_steps=2).prefetch(100)
-
     iterator = iter(dataset)
 
-    num_iterations = TOTAL_ITERATIONS 
     log_interval = math.floor(TOTAL_ITERATIONS/10)
 
-
-
-    for _ in range(num_iterations):
-        # Collect one episode and get the total reward.
+    for _ in range(TOTAL_ITERATIONS):
+        #Create Data and put it in the buffer
         episode_reward = collect_episode(train_env, collect_policy, replay_buffer)
-        # Create a trajectory from the replay buffer.
+        #Get random episodes from the buffer
         experience, unused_info = next(iterator)
-        # Train the agent with this trajectory.
+        #Train on the data from the buffer
         train_loss = agent.train(experience).loss
         if tf.math.is_nan(train_loss) or tf.math.is_inf(train_loss):
             print(f'Loss is NaN or inf at iteration {_}. Stopping training...')
@@ -273,6 +271,9 @@ def main(TOTAL_ITERATIONS=conf.DEFAULT_TOTAL_ITERATIONS, MODE=conf.DEFAULT_MODE)
 
     return agent
     
+
+
+
 
 def test_agent(py_env, tf_env, agent, num_episodes=5):
     episode_rewards = []
@@ -308,36 +309,18 @@ def test_agent(py_env, tf_env, agent, num_episodes=5):
 
 def visualize_agent_performance(episode_rewards, episode_actions, episode_scores, round_card_actions):
     plt.figure(figsize=(15, 5))
-
     plt.subplot(1, 2, 1)
     plt.plot(episode_rewards)
     plt.title('Episode Rewards')
-
-    # plt.subplot(1, 3, 2)
-    # counts = np.bincount(episode_actions)
-    # x = np.arange(len(counts))
-    # plt.bar(x, counts)
-    # plt.xticks(x)
-    # plt.title('Frequency of numbers in the array')
-    # plt.xlabel('Number')
-    # plt.ylabel('Frequency')
-
-
     plt.subplot(1, 2, 2)
-    #plt.figure(figsize=(10, 5))
     print(round_card_actions)
-
     max_action = 1
     max_card = conf.NUMBER_OF_CARDS-1
     max_round_num = conf.NUMBER_OF_ROUNDS-1
-
-    # Assume that max_action, max_card, max_round_num are predefined
     cards = list(range(max_card+1))
     actions = list(range(max_action+1))
-
     bar_bottoms = [0 for _ in cards]
     colormaps = [cm.get_cmap('viridis'), cm.get_cmap('inferno')]  # Provide as many colormaps as there are action types
-
     for action in actions:
         colormap = colormaps[action]
         for round_num in range(max_round_num+1):
@@ -346,7 +329,6 @@ def visualize_agent_performance(episode_rewards, episode_actions, episode_scores
             plt.bar(cards, counts, bottom=bar_bottoms, color=color)
             for card in cards:
                 bar_bottoms[card] += counts[card]
-
     plt.title('Card Action Counts')
     plt.xlabel('Card')
     plt.ylabel('Count')

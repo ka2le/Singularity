@@ -12,34 +12,54 @@ class Card:
         self.id = id
 
     def perform_action(self, action_index, player):
+        
         player_copy = player.copy()
+
         action = self.actions[action_index]
+        #print(f"Action {action}")
         #print(f"action {action} action_index {action_index} id {self.id}")
         player['score'] = max(0, action[0](player_copy))
         player['data'] = max(0, action[1](player_copy))
         player['processing'] = max(0, action[2](player_copy))
 
+class Action:
+    def __init__(self, value, attr, action_index):
+        self.value = value
+        self.attr = attr
+        self.action_index = action_index
+        self.func = self.create_fn()
+
+    def create_fn(self):
+        def fn(player):
+            return min(100000, player[self.attr] + self.value)
+        return fn
+
+    def __call__(self, player):
+        return self.func(player)
+
+    def __repr__(self):
+        return f'<Action id={self.action_index} {self.attr} by {self.value}>'
+
 def create_card(id, *actions):
     action_funcs = []
-    for action in actions:
+    for i, action in enumerate(actions):
         score, data, processing = action
+
         if not callable(score):
-            score_value = score
-            score = lambda player: max(0, player['score'] + score_value)
+            score = Action(score, 'score', i)
         if not callable(data):
-            data_value = data
-            data = lambda player: max(0, player['data'] + data_value)
+            data = Action(data, 'data', i)
         if not callable(processing):
-            processing_value = processing
-            processing = lambda player: max(0, player['processing'] + processing_value)
+            processing = Action(processing, 'processing', i)
+
         action_funcs.append((score, data, processing))
-    
-    return Card(id,action_funcs)
+
+    return Card(id, action_funcs)
 
 
 def get_all_cards(player):
     all_cards = [
-        create_card(0,(-10, 0, 0)),
+        create_card(0,(-1000, 0, 0),(1000, 0, 0)),
         create_card(1,(12, 0, 0)),
         create_card(2,(-10, 0, 0)),
         create_card(3,(12, 0, 0)),
