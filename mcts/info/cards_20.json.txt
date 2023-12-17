@@ -1,0 +1,182 @@
+[
+  {
+    "title": "Data Protection",
+    "action1": "Activate Security Protocol",
+    "details1": "+4 processing and +4 processing if opponent has 0 processing",
+    "action2": "Disable Firewall",
+    "details2": "+8 score in 1 \nmore round",
+    "cost": "30 data or 14 processing",
+    "id": "1"
+  },
+  {
+    "title": "Data Mining",
+    "action1": "Test Linear Regression",
+    "details1": "+4 data and +4 data per 10 data",
+    "action2": "Learn Deeply",
+    "details2": "Take and play a card from any discard pile, paying its cost after this card's.",
+    "cost": "Card and 8 processing or 14 data",
+    "id": "2"
+  },
+  {
+    "title": "Reinforcement Learning",
+    "action1": "Explore Greedily",
+    "details1": "+6 data and +6 data if below 16 data",
+    "action2": "Predict Q Values",
+    "details2": "+2 score per 10 \ntotal data and processing spent",
+    "cost": "All data and All processing",
+    "id": "3"
+  },
+  {
+    "title": "Supervised Learning",
+    "action1": "Calibrate Reward Parameters",
+    "details1": "+6 data and +10 data if the top card in your discard pile has 'Data' in its name",
+    "action2": "Outsource Labeling",
+    "details2": "Before Card Draw, collect cards on hands and divide equally as you choose",
+    "cost": "4 processing or 10 data",
+    "id": 4
+  },
+  {
+    "title": "Quantum Computing",
+    "action1": "Get Quantum Entangled",
+    "details1": "Both players lose up to 12 data each",
+    "action2": "Enable Quantum Supremacy",
+    "details2": "+2 score and +4 Score per 10 Processing spent",
+    "cost": "All Processing",
+    "id": 5
+  },
+  {
+    "title": "Swarm Intelligence",
+    "action1": "Apply swarm solutions",
+    "details1": "+4 Data and +4 Data per 10 Data",
+    "action2": "Release the Swarm",
+    "details2": "+2 score and get either +2 data per 1 processing spent or +1 processing per 2 data spent ",
+    "cost": "All data or All processing",
+    "id": 6
+  },
+  {
+    "title": "Tensor Processing Unit",
+    "action1": "Select optimizer algorithm",
+    "details1": "+4 data and +4 data per 10 data",
+    "action2": "Multiply the Matrix",
+    "details2": "Before Card Draw, look at and rearrange the top 6 \ncards",
+    "cost": "8 data or 4 processing ",
+    "id": 7
+  },
+  {
+    "title": "FontSGenerative Adversarial Network",
+    "action1": "Deceive Discriminator",
+    "details1": "+2 data per card in your discard pile",
+    "action2": "Begin Zero-Sum Game",
+    "details2": "Competition: The player with the most processing after 2 \nmore rounds gets +8 score",
+    "cost": "4 data or 4 processing",
+    "id": 8
+  },
+  {
+    "title": "Computer Vision",
+    "action1": "Detect objects",
+    "details1": "+2 \nand +4 \nper 10 \nto either data or processing",
+    "action2": "Tune model",
+    "details2": "If you have more Data than opponent get <br> +3 score and +2 score per 10 data spent ",
+    "cost": "Half Processing and Half data",
+    "id": "9"
+  },
+  {
+    "title": "Recurrent Neural Network",
+    "action1": "Recall Long Short-Term Memory",
+    "details1": "Loan 20 data pay back up to 26 data in 2 \nrounds",
+    "action2": "Backpropagate errors",
+    "details2": "+1 score per card in your discard pile",
+    "cost": "3 data per card",
+    "id": "10"
+  },
+  {
+    "title": "Hacker",
+    "action1": "security by obscurity",
+    "details1": "+3 Data and +2 Processing and +1 score",
+    "action2": "Hire the hacker",
+    "details2": "Steal up to 4 score from opponent",
+    "cost": "14 processing",
+    "id": 11
+  },
+  {
+    "title": "Data Scientist",
+    "action1": "Produce Graphs",
+    "details1": "+6 data and +3 data per 10 data",
+    "action2": "Paus Ethically",
+    "details2": "This round, block all actions, delayed actions, and costs except this; all affected cards go to your discard pile",
+    "cost": "Half data min 10 data",
+    "id": 12
+  },
+  {
+    "title": "FontSConvolutional Neural Network",
+    "action1": "Reconstruct Latent Space",
+    "details1": "+6 data and + 3 data per 10 data and after Card Draw, both players reveal their hand",
+    "action2": "Contest Art",
+    "details2": "Get half difference in score if opponent has <br> more score",
+    "cost": "Half data and half processing ",
+    "id": 13
+  },
+  {
+    "title": "Data Farm",
+    "action1": "Launch Data Seeding Simulation",
+    "details1": "+12 processing and +6 processing to your opponent",
+    "action2": "Harvest Data ",
+    "details2": "Competition: The player with highest reached data starting now get +8 score at end of game",
+    "cost": "10 data or 6 processing ",
+    "id": 14
+  },
+  {
+    "title": "Data Center",
+    "action1": "Establish redundancy",
+    "details1": "Copy free action of the first card opponent plays this turn",
+    "action2": "Provide Storage",
+    "details2": "+2 score and +2 Score per 10 Data",
+    "cost": "All data",
+    "id": 15
+  },
+  {
+    "title": "Deep Blue",
+    "action1": "Apply Alpha-Beta pruned Minimaxing",
+    "details1": "+6 data and +3 data per 10 data",
+    "action2": "Roll out the nodes",
+    "details2": "After Card Draw, swap hand and processing with your opponent if you have at least 1 \nmore processing",
+    "cost": "Processing advantage ",
+    "id": 16
+  },
+  {
+    "title": "CPU Voltage Spike",
+    "action1": "Accidentally Overclock",
+    "details1": "+4 data and then set your data to the next whole 10 data",
+    "action2": "Overload game",
+    "details2": "Competition: The player with \"Data Protection\" in their discard pile at game end get +8 score",
+    "cost": "10 data or 6 processing",
+    "id": 17
+  },
+  {
+    "title": "Neural Network",
+    "action1": "Select optimizer algorithm",
+    "details1": "+4 data and +4 data per 10 data",
+    "action2": "Add deep layers",
+    "details2": "Before Card Draw, reveal both players hands and choose a free action to copy twice",
+    "cost": "8 data or 6 processing ",
+    "id": 18
+  },
+  {
+    "title": "Weighted Neurons",
+    "action1": "Compute Gradient Descent",
+    "details1": "+5 data per 10 data to both players",
+    "action2": "Regularize Weights",
+    "details2": "+4 processing and +5 processing per 10 Data ",
+    "cost": "10 data or 5 processing",
+    "id": 19
+  },
+  {
+    "title": "Genetic Algorithms",
+    "action1": "Mutate Variables",
+    "details1": "+4 processing and +5 processing per 10 processing",
+    "action2": "Evolve Sequence",
+    "details2": "In 5 \nmore rounds get +3 Score per 10 data  or processing spent now",
+    "cost": "All Data or All processing ",
+    "id": 20
+  }
+]

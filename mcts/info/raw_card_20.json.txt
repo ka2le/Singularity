@@ -1,0 +1,223 @@
+[
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142730316168036352/ka2ledionysuz_robot_in_the_style_of_neon_punk_illustration_glow_a9ac3f6a-c568-4311-af91-2ce8ea251452.png",
+    "title": "Data Protection",
+    "action1": "Activate Security Protocol",
+    "details1": "+4 processing and +4 processing if opponent has 0 processing",
+    "action2": "Disable Firewall",
+    "details2": "+8 score in 1 \nmore round",
+    "cost": "30 data or 14 processing",
+    "id": "1",
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142888684128059553/ka2ledionysuz_miners_axe_sledge_sledge_hammer_axe_coal_miner_ho_b40227a0-9db6-43ab-bf76-c000c78d23aa.jpg",
+    "title": "Data Mining",
+    "action1": "Test Linear Regression",
+    "details1": "+4 data and +4 data per 10 data",
+    "action2": "Learn Deeply",
+    "details2": "Take and play a card from any discard pile, paying its cost after this card's.",
+    "cost": "Card and 8 processing or 14 data",
+    "id": "2",
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142872458567880836/ka2ledionysuz_rat_in_human_clothes_in_labyrinth_maze_tron__in_t_39c4a69e-2896-42f2-a001-b3f9ed1417d3.jpg",
+    "title": "Reinforcement Learning",
+    "action1": "Explore Greedily",
+    "details1": "+6 data and +6 data if below 16 data",
+    "action2": "Predict Q Values",
+    "details2": "+2 score per 10 \ntotal data and processing spent",
+    "cost": "All data and All processing",
+    "id": "3",
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142917895148552353/ka2ledionysuz_cute_robot_sitting_at_school_desk_with_papers_and_3e0783c4-2dc1-4963-b6f0-7b84cc45eedf.png",
+    "title": "Supervised Learning",
+    "action1": "Calibrate Reward Parameters",
+    "details1": "+6 data and +10 data if the top card in your discard pile has 'Data' in its name",
+    "action2": "Outsource Labeling",
+    "details2": "Before Card Draw, collect cards on hands and divide equally as you choose",
+    "cost": "4 processing or 10 data",
+    "id": 4,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1143094380132048917/ka2ledionysuz_copper_coils_advanced_sci_fi_quantum_engine_hangi_a6c54a8a-a292-46bf-af5a-32cec74bca83.jpg",
+    "title": "Quantum Computing",
+    "action1": "Get Quantum Entangled",
+    "details1": "Both players lose up to 12 data each",
+    "action2": "Enable Quantum Supremacy",
+    "details2": "+2 score and +4 Score per 10 Processing spent",
+    "cost": "All Processing",
+    "id": 5,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1139863103954243634/ka2ledionysuz_robot_insect_flying_over_city_wasps_three_rovot_i_6eb827db-6521-4416-88f0-5e0e7840e6f1.png",
+    "title": "Swarm Intelligence",
+    "action1": "Apply swarm solutions",
+    "details1": "+4 Data and +4 Data per 10 Data",
+    "action2": "Release the Swarm",
+    "details2": "+2 score and get either +2 data per 1 processing spent or +1 processing per 2 data spent ",
+    "cost": "All data or All processing",
+    "id": 6,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142550685653676065/ka2ledionysuz_computer_board_city_tilt_shift_lens_circuitry_cit_7129fbec-38e4-4e02-b103-bc5a1f6c9bff.png",
+    "title": "Tensor Processing Unit",
+    "action1": "Select optimizer algorithm",
+    "details1": "+4 data and +4 data per 10 data",
+    "action2": "Multiply the Matrix",
+    "details2": "Before Card Draw, look at and rearrange the top 6 \ncards",
+    "cost": "8 data or 4 processing ",
+    "id": 7,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142714394296451122/ka2ledionysuz_robot_boxers_boxing_ring_gloves__in_the_style_of__f4b3ce2e-ee37-4e51-b7d2-448015870e8a.jpg",
+    "title": "FontSGenerative Adversarial Network",
+    "action1": "Deceive Discriminator",
+    "details1": "+2 data per card in your discard pile",
+    "action2": "Begin Zero-Sum Game",
+    "details2": "Competition: The player with the most processing after 2 \nmore rounds gets +8 score",
+    "cost": "4 data or 4 processing",
+    "id": 8,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1139670504286998558/ka2ledionysuz_bionic_eye_artificial_eye_wires_circuits_in_eye___604957da-d751-4a0d-bd2e-ffa8d2b15203.jpg",
+    "title": "Computer Vision",
+    "action1": "Detect objects",
+    "details1": "+2 \nand +4 \nper 10 \nto either data or processing",
+    "action2": "Tune model",
+    "details2": "If you have more Data than opponent get <br> +3 score and +2 score per 10 data spent ",
+    "cost": "Half Processing and Half data",
+    "id": "9",
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1139938474171048099/ka2ledionysuz_many_puzzle_pieces_neon_lines_shaped_like_jigsaw__12bb6b20-7000-4022-b490-8b3fccc0ff4f.png",
+    "title": "Recurrent Neural Network",
+    "action1": "Recall Long Short-Term Memory",
+    "details1": "Loan 20 data pay back up to 26 data in 2 \nrounds",
+    "action2": "Backpropagate errors",
+    "details2": "+1 score per card in your discard pile",
+    "cost": "3 data per card",
+    "id": "10",
+    "type": "base"
+  },
+  {
+    "img": "/chatgpt-apps3/static/media/hacker2.fafe8a4e4e2ede9b6428.png",
+    "title": "Hacker",
+    "action1": "security by obscurity",
+    "details1": "+3 Data and +2 Processing and +1 score",
+    "action2": "Hire the hacker",
+    "details2": "Steal up to 4 score from opponent",
+    "cost": "14 processing",
+    "id": 11,
+    "type": "base"
+  },
+  {
+    "img": "/chatgpt-apps3/static/media/scientist2.899cf2b08a566a681b4b.png",
+    "title": "Data Scientist",
+    "action1": "Produce Graphs",
+    "details1": "+6 data and +3 data per 10 data",
+    "action2": "Paus Ethically",
+    "details2": "This round, block all actions, delayed actions, and costs except this; all affected cards go to your discard pile",
+    "cost": "Half data min 10 data",
+    "id": 12,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142707732097540116/ka2ledionysuz_big_easel_in_center_very_illuminated_glow_glowing_d5d54114-6335-452c-a2f2-b847a85d7d33.png",
+    "title": "FontSConvolutional Neural Network",
+    "action1": "Reconstruct Latent Space",
+    "details1": "+6 data and + 3 data per 10 data and after Card Draw, both players reveal their hand",
+    "action2": "Contest Art",
+    "details2": "Get half difference in score if opponent has <br> more score",
+    "cost": "Half data and half processing ",
+    "id": 13,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1147968605082877962/ka2ledionysuz_harvest_machine_in_the_style_of_neon_punk_sci_fi__981de58e-ad0a-4e9d-ad55-a47401bf4aeb.png",
+    "title": "Data Farm",
+    "action1": "Launch Data Seeding Simulation",
+    "details1": "+12 processing and +6 processing to your opponent",
+    "action2": "Harvest Data ",
+    "details2": "Competition: The player with highest reached data starting now get +8 score at end of game",
+    "cost": "10 data or 6 processing ",
+    "id": 14,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1139672147984404510/ka2ledionysuz_mountain_hall_server_hall_neon_punk_glow_lights_c_bf3fd202-db9f-42b2-bc6f-015769807d36.png",
+    "title": "Data Center",
+    "action1": "Establish redundancy",
+    "details1": "Copy free action of the first card opponent plays this turn",
+    "action2": "Provide Storage",
+    "details2": "+2 score and +2 Score per 10 Data",
+    "cost": "All data",
+    "id": 15,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1147981655462641694/ka2ledionysuz_chess_chess_pieces_neon_glow_sci_fi_futuristic_la_b5cb2d1d-8c13-4e41-a01f-881b89bb16ee.png",
+    "title": "Deep Blue",
+    "action1": "Apply Alpha-Beta pruned Minimaxing",
+    "details1": "+6 data and +3 data per 10 data",
+    "action2": "Roll out the nodes",
+    "details2": "After Card Draw, swap hand and processing with your opponent if you have at least 1 \nmore processing",
+    "cost": "Processing advantage ",
+    "id": 16,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1139931604823842906/ka2ledionysuz_very_thick_lightning_bolt_ligthning_storm_lightni_e02a8b76-8a7c-4dab-8832-c59267603976_20230812164042249.jpg",
+    "title": "CPU Voltage Spike",
+    "action1": "Accidentally Overclock",
+    "details1": "+4 data and then set your data to the next whole 10 data",
+    "action2": "Overload game",
+    "details2": "Competition: The player with \"Data Protection\" in their discard pile at game end get +8 score",
+    "cost": "10 data or 6 processing",
+    "id": 17,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1142880266130575470/ka2ledionysuz_spiderweb_thin_web_detailed__city_background_blur_afae3805-496e-42a4-9d04-72114d66d2eb.png",
+    "title": "Neural Network",
+    "action1": "Select optimizer algorithm",
+    "details1": "+4 data and +4 data per 10 data",
+    "action2": "Add deep layers",
+    "details2": "Before Card Draw, reveal both players hands and choose a free action to copy twice",
+    "cost": "8 data or 6 processing ",
+    "id": 18,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1139954903402430554/ka2ledionysuz_waporpunk_neon_glow_epic_4f61a6dc-c0dc-413b-a7ff-15345e971973.jpg",
+    "title": "Weighted Neurons",
+    "action1": "Compute Gradient Descent",
+    "details1": "+5 data per 10 data to both players",
+    "action2": "Regularize Weights",
+    "details2": "+4 processing and +5 processing per 10 Data ",
+    "cost": "10 data or 5 processing",
+    "id": 19,
+    "type": "base"
+  },
+  {
+    "img": "https://cdn.discordapp.com/attachments/1139234832178745466/1139850326812409896/ka2ledionysuz_dna_helix_dna_strands_dna_helix_on_top_city_in_ba_d929eb0a-0bb6-46e9-aec3-476439ca8d73.png",
+    "title": "Genetic Algorithms",
+    "action1": "Mutate Variables",
+    "details1": "+4 processing and +5 processing per 10 processing",
+    "action2": "Evolve Sequence",
+    "details2": "In 5 \nmore rounds get +3 Score per 10 data  or processing spent now",
+    "cost": "All Data or All processing ",
+    "id": 20,
+    "type": "base"
+  }
+  
+]
